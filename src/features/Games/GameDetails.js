@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 export default function GameDetails() {
     const [game, setGame] = useState(null);
@@ -19,7 +19,11 @@ export default function GameDetails() {
     return (
         <div>
             <h1>{ game.title }</h1>
-            {game.description}
+            <div>{game.description}</div>
+
+            <div>
+                <Link className="btn btn-success" to={ '/games/edit/' + id }>Edit Game</Link>
+            </div>
         </div>
     )
 }
