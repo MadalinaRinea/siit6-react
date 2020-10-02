@@ -1,9 +1,20 @@
 import React, { useContext } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import * as firebase from "firebase/app";
+import "firebase/auth";
+
 import { AuthContext } from '../features/Auth/AuthContext';
 
 export default function Nav() {
     const { isAuthenticated, user } = useContext(AuthContext);
+
+    function handleLogout(e) {
+        e.preventDefault();
+
+        firebase.auth().signOut().catch(function(error) {
+            console.warn(error);
+        });
+    }
 
     return (
         <nav className="navbar navbar-expand navbar-dark bg-dark">
@@ -15,15 +26,22 @@ export default function Nav() {
                     <li className="nav-item">
                         <NavLink className="nav-link" exact to="/">Home <span className="sr-only">(current)</span></NavLink>
                     </li>
-                    <li className="nav-item mr-auto">
+                    <li className="nav-item">
                         <NavLink className="nav-link" exact to="/games">Games</NavLink>
+                    </li>
+                    <li className="nav-item mr-auto">
+                        <NavLink className="nav-link" exact to="/todos">Todos</NavLink>
                     </li>
 
                     { isAuthenticated ? (
-                        <li className="nav-item">
-                            Welcome { user.email }! 
-                            <a className="nav-link" href="/">Logout</a>
-                        </li>
+                        <>
+                            <li className="nav-item">
+                                <span className="navbar-text">Welcome { user.email }! </span>
+                            </li>
+                            <li className="nav-item">
+                                <a className="nav-link" href="/" onClick={handleLogout}>Logout</a>
+                            </li>
+                        </>
                     ) : (
                         <>
                             <li className="nav-item">

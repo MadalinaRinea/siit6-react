@@ -8,6 +8,7 @@ import GameDetails from '../features/Games/GameDetails';
 import EditGame from '../features/Games/EditGame';
 import LoginRegister from '../features/Auth/LoginRegister';
 import { AuthContextProvider } from '../features/Auth/AuthContext';
+import Todos from '../features/Todos/Todos';
 
 import 'bootstrap/dist/css/bootstrap.css';
 
@@ -33,6 +34,8 @@ function App() {
                     
                     <Route exact path="/login" component={ LoginRegister } />
                     <Route exact path="/register" component={ LoginRegister } />
+
+                    <Route exact path="/todos" component={ Todos } />
 
                     <Route exact path="/games" component={ GamesList } />
                     <Route exact path="/games/edit/:id" component={ EditGame } />
