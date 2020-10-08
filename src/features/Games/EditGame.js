@@ -1,15 +1,26 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
 
-export default function EditGame() {
-    const [game, setGame] = useState(null);
-    const [alert, setAlert] = useState(null);
-    const [isValid, setIsValid] = useState({
-        title: true,
-        genre: true,
-        description: true,
-    });
+import useForm from '../../hooks/useForm';
 
+const validationRules = {
+    title: [
+        {name: 'required'},
+        {name: 'min-length', value: 6}
+    ],
+    genre: [
+        {name: 'required'}
+    ],
+    description: [
+        {name: 'required'}
+    ]
+};
+
+export default function EditGame() {
+    const [alert, setAlert] = useState(null);
+    const [game, setGame] = useState(null);
+    const {values, inputProps, errors} = useForm(game, validationRules); 
+    
     const { id } = useParams();
 
     useEffect(() => {
@@ -22,44 +33,13 @@ export default function EditGame() {
         return <h1>Loading ...</h1>;
     }
     
-    console.log(game);
-
-    function handleInputChange(e) {
-        // const newGame = { ...game };
-        // newGame[e.target.name] = e.target.value;
-        // setGame(newGame);
-
-        setGame({ ...game, [e.target.name]: e.target.value });
-
-        if(!e.target.value) {
-            setAlert({
-                type: 'danger',
-                message: 'All fields are mandatory',
-            });
-
-            setIsValid({ ...isValid, [e.target.name]: false});
-        } else {
-            setAlert(null);
-            setIsValid({ ...isValid, [e.target.name]: true});
-        }
-    }
-
-    function isFormValid() {
-        for(const field in isValid) {
-            if(!isValid[field]) {
-                return false;
-            }
-        }
-        
-        return true;
-    }
 
     function handleSubmit(e) {
         e.preventDefault();
 
-        const { _id, ...newGame } = game;
+        const { _id, ...newGame } = values;
 
-        if(isFormValid()) {
+        if(!errors.length) {
             fetch('https://games-app-siit.herokuapp.com/games/' + id, {
                 method: 'PUT',
                 headers: {
@@ -85,7 +65,7 @@ export default function EditGame() {
                 });
         }
     }
-    console.log(alert);
+    
     return (
         <form onSubmit={ handleSubmit }>
             { alert?.message && (
@@ -93,19 +73,28 @@ export default function EditGame() {
                     { alert.message }
                 </div>
             )}
+
+            { Boolean(errors.length) && (
+                <div className={ `alert alert-danger` } role="alert">
+                    The form has validation error(s), please fix them and try again:
+                    <ul>
+                        { errors.map(error => <li>{ error.message }</li>) }
+                    </ul>
+                </div>
+            )}
             
             <h1>Editing { game.title }</h1>
             <div className="form-group">
                 <label htmlFor="title">Title</label>
-                <input type="text" className="form-control" id="title" name="title" value={ game.title } onChange={ handleInputChange } />
+                <input type="text" className="form-control" id="title" {...inputProps('title')} />
             </div>
             <div className="form-group">
                 <label htmlFor="genre">Genre</label>
-                <input type="text" className="form-control" id="genre" name="genre" value={ game.genre } onChange={ handleInputChange } />
+                <input type="text" className="form-control" id="genre" {...inputProps('genre')} />
             </div>
             <div className="form-group">
                 <label htmlFor="description">Description</label>
-                <textarea className="form-control" id="description" name="description" value={ game.description } onChange={ handleInputChange }>
+                <textarea className="form-control" id="description" {...inputProps('description')}>
                 </textarea>
             </div>
             <button type="submit" className="btn btn-primary">Submit</button>
