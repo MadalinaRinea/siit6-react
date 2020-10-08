@@ -11,15 +11,15 @@ import { AuthContextProvider } from '../features/Auth/AuthContext';
 import Todos from '../features/Todos/Todos';
 
 import 'bootstrap/dist/css/bootstrap.css';
-
+console.log(process.env)
 const firebaseConfig = {
-    apiKey: "AIzaSyCrNeWr0OTJHvVtOxiVwy4TP6BEA6EUCUQ",
-    authDomain: "siit6-44a9f.firebaseapp.com",
-    databaseURL: "https://siit6-44a9f.firebaseio.com",
-    projectId: "siit6-44a9f",
-    storageBucket: "siit6-44a9f.appspot.com",
-    messagingSenderId: "383651846910",
-    appId: "1:383651846910:web:3f0c8e7e5a54771db163af"
+    apiKey: process.env.REACT_APP_FBapiKey,
+    authDomain: process.env.REACT_APP_FBauthDomain,
+    databaseURL: process.env.REACT_APP_FBdatabaseURL,
+    projectId: process.env.REACT_APP_FBprojectId,
+    storageBucket: process.env.REACT_APP_FBstorageBucket,
+    messagingSenderId: process.env.REACT_APP_FBmessagingSenderId,
+    appId: process.env.REACT_APP_FBappId
 };
 firebase.initializeApp(firebaseConfig);
 
